@@ -341,6 +341,6 @@ Jika Anda mengalami masalah atau memiliki pertanyaan:
 ---
 
 <div align="center">
-  <p>Dibuat dengan ❤️ menggunakan React Native + TypeScript</p>
+  <p>Dibuat menggunakan React Native + TypeScript</p>
   <p>⭐ Star repository ini jika Anda menyukainya!</p>
 </div>
