@@ -188,10 +188,29 @@ export const useCalculator = () => {
       const inputValue = parseFloat(prev.display);
 
       try {
-        const result = calculator.current.performFunction(func, inputValue);
-        const formattedResult = calculator.current.formatNumber(result);
+        let result: number;
+        let expression: string;
 
-        addToHistory(`${func}(${calculator.current.formatNumber(inputValue)})`, formattedResult);
+        // Handle advanced functions
+        switch (func) {
+          case 'sin':
+          case 'cos':
+          case 'tan':
+            result = calculator.current.performFunction(func, inputValue);
+            expression = `${func}(${calculator.current.formatNumber(inputValue)})`;
+            break;
+          case 'log':
+          case 'ln':
+            result = calculator.current.performFunction(func, inputValue);
+            expression = `${func}(${calculator.current.formatNumber(inputValue)})`;
+            break;
+          default:
+            result = calculator.current.performFunction(func, inputValue);
+            expression = `${func}(${calculator.current.formatNumber(inputValue)})`;
+        }
+
+        const formattedResult = calculator.current.formatNumber(result);
+        addToHistory(expression, formattedResult);
 
         return {
           ...prev,
@@ -286,6 +305,84 @@ export const useCalculator = () => {
     setState(prev => ({ ...prev, theme }));
   }, []);
 
+  // Memory functions
+  const memoryClear = useCallback(() => {
+    calculator.current.memoryClear();
+  }, []);
+
+  const memoryRecall = useCallback(() => {
+    setState(prev => ({
+      ...prev,
+      display: calculator.current.formatNumber(calculator.current.memoryRecall()),
+      waitingForOperand: true,
+      isError: false
+    }));
+  }, []);
+
+  const memoryAdd = useCallback(() => {
+    const currentValue = parseFloat(state.display);
+    calculator.current.memoryAdd(currentValue);
+  }, [state.display]);
+
+  const memorySubtract = useCallback(() => {
+    const currentValue = parseFloat(state.display);
+    calculator.current.memorySubtract(currentValue);
+  }, [state.display]);
+
+  const memoryStore = useCallback(() => {
+    const currentValue = parseFloat(state.display);
+    calculator.current.memoryStore(currentValue);
+  }, [state.display]);
+
+  // Advanced operations
+  const power = useCallback((exponent: number) => {
+    setState(prev => {
+      const base = parseFloat(prev.display);
+      try {
+        const result = calculator.current.power(base, exponent);
+        const formattedResult = calculator.current.formatNumber(result);
+        addToHistory(`${calculator.current.formatNumber(base)}^${exponent}`, formattedResult);
+        
+        return {
+          ...prev,
+          display: formattedResult,
+          waitingForOperand: true,
+          isError: false
+        };
+      } catch (error) {
+        return {
+          ...prev,
+          display: 'Error',
+          isError: true
+        };
+      }
+    });
+  }, [addToHistory]);
+
+  const nthRoot = useCallback((n: number) => {
+    setState(prev => {
+      const value = parseFloat(prev.display);
+      try {
+        const result = calculator.current.nthRoot(value, n);
+        const formattedResult = calculator.current.formatNumber(result);
+        addToHistory(`${n}√${calculator.current.formatNumber(value)}`, formattedResult);
+        
+        return {
+          ...prev,
+          display: formattedResult,
+          waitingForOperand: true,
+          isError: false
+        };
+      } catch (error) {
+        return {
+          ...prev,
+          display: 'Error',
+          isError: true
+        };
+      }
+    });
+  }, [addToHistory]);
+
   return {
     state,
     inputNumber,
@@ -299,6 +396,13 @@ export const useCalculator = () => {
     insertConstant,
     deleteLastChar,
     clearHistory,
-    setTheme
+    setTheme,
+    memoryClear,
+    memoryRecall,
+    memoryAdd,
+    memorySubtract,
+    memoryStore,
+    power,
+    nthRoot
   };
 };

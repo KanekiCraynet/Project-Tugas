@@ -1,6 +1,8 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, Animated } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Animated, Dimensions } from 'react-native';
 import { ButtonConfig } from '../types/calculator';
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('window');
 
 interface ButtonProps extends ButtonConfig {
   onPress: () => void;
@@ -143,10 +145,25 @@ export const Button: React.FC<ButtonProps> = ({
       'e': 'e',
       'plus-minus': '±',
       'decimal': '.',
+      'sin': 'sin',
+      'cos': 'cos',
+      'tan': 'tan',
+      'log': 'log',
+      'ln': 'ln',
     };
     
     return iconMap[icon] || label;
   };
+
+  const getButtonSize = () => {
+    const isCompact = screenWidth < 400 || screenHeight < 700;
+    const baseSize = isCompact ? 60 : 70;
+    const fontSize = isCompact ? 20 : 24;
+    
+    return { height: baseSize, fontSize };
+  };
+
+  const { height: buttonHeight, fontSize } = getButtonSize();
 
   return (
     <Animated.View
@@ -162,7 +179,7 @@ export const Button: React.FC<ButtonProps> = ({
         onPressOut={handlePressOut}
         activeOpacity={0.8}
       >
-        <Text style={getTextStyles()}>
+        <Text style={[getTextStyles(), { fontSize }]}>
           {getIcon()}
         </Text>
       </TouchableOpacity>
@@ -172,20 +189,21 @@ export const Button: React.FC<ButtonProps> = ({
 
 const styles = StyleSheet.create({
   button: {
-    height: 70,
-    margin: 4,
-    borderRadius: 16,
+    margin: 3,
+    borderRadius: 18,
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 3,
+    elevation: 4,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    minWidth: 60,
+    aspectRatio: 1,
   },
   buttonText: {
-    fontSize: 24,
     fontWeight: '600',
+    textAlign: 'center',
   },
   activeButton: {
     elevation: 8,
