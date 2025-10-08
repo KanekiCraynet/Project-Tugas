@@ -85,6 +85,13 @@ export default function App() {
           case 'e':
             insertConstant('e');
             break;
+          case 'sin':
+          case 'cos':
+          case 'tan':
+          case 'log':
+          case 'ln':
+            performFunction(value);
+            break;
         }
         break;
       
