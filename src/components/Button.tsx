@@ -1,44 +1,130 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { TouchableOpacity, Text, StyleSheet, Animated } from 'react-native';
 import { ButtonConfig } from '../types/calculator';
 
 interface ButtonProps extends ButtonConfig {
-  onClick: () => void;
+  onPress: () => void;
+  theme: 'light' | 'dark' | 'neon';
   isActive?: boolean;
-  isAnimating?: boolean;
-  disabled?: boolean;
 }
 
 export const Button: React.FC<ButtonProps> = ({
   type,
   value,
   label,
-  className = '',
   icon,
-  onClick,
-  isActive = false,
-  isAnimating = false,
-  disabled = false
+  flex = 1,
+  onPress,
+  theme,
+  isActive = false
 }) => {
-  const getButtonClass = () => {
-    const baseClass = 'relative overflow-hidden rounded-xl font-semibold transition-all duration-300 transform focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed';
+  const scaleAnim = React.useRef(new Animated.Value(1)).current;
+  const opacityAnim = React.useRef(new Animated.Value(1)).current;
+
+  const handlePressIn = () => {
+    Animated.parallel([
+      Animated.timing(scaleAnim, {
+        toValue: 0.95,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: 0.8,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const handlePressOut = () => {
+    Animated.parallel([
+      Animated.timing(scaleAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 100,
+        useNativeDriver: true,
+      }),
+    ]).start();
+  };
+
+  const getButtonStyles = () => {
+    const baseStyle = [styles.button, { flex }];
     
     switch (type) {
       case 'number':
-        return `${baseClass} button-number ${className}`;
+        return [...baseStyle, getThemeStyles().numberButton];
       case 'operator':
-        return `${baseClass} button-operator ${className}`;
+        return [...baseStyle, getThemeStyles().operatorButton];
       case 'function':
-        return `${baseClass} button-secondary ${className}`;
+        return [...baseStyle, getThemeStyles().functionButton];
       case 'special':
-        return `${baseClass} button-primary ${className}`;
+        return [...baseStyle, getThemeStyles().specialButton];
       default:
-        return `${baseClass} button-secondary ${className}`;
+        return [...baseStyle, getThemeStyles().functionButton];
+    }
+  };
+
+  const getTextStyles = () => {
+    const baseStyle = [styles.buttonText];
+    
+    switch (type) {
+      case 'number':
+        return [...baseStyle, getThemeStyles().numberText];
+      case 'operator':
+        return [...baseStyle, getThemeStyles().operatorText];
+      case 'function':
+        return [...baseStyle, getThemeStyles().functionText];
+      case 'special':
+        return [...baseStyle, getThemeStyles().specialText];
+      default:
+        return [...baseStyle, getThemeStyles().functionText];
+    }
+  };
+
+  const getThemeStyles = () => {
+    switch (theme) {
+      case 'light':
+        return {
+          numberButton: styles.lightNumberButton,
+          operatorButton: styles.lightOperatorButton,
+          functionButton: styles.lightFunctionButton,
+          specialButton: styles.lightSpecialButton,
+          numberText: styles.lightNumberText,
+          operatorText: styles.lightOperatorText,
+          functionText: styles.lightFunctionText,
+          specialText: styles.lightSpecialText,
+        };
+      case 'neon':
+        return {
+          numberButton: styles.neonNumberButton,
+          operatorButton: styles.neonOperatorButton,
+          functionButton: styles.neonFunctionButton,
+          specialButton: styles.neonSpecialButton,
+          numberText: styles.neonNumberText,
+          operatorText: styles.neonOperatorText,
+          functionText: styles.neonFunctionText,
+          specialText: styles.neonSpecialText,
+        };
+      default:
+        return {
+          numberButton: styles.darkNumberButton,
+          operatorButton: styles.darkOperatorButton,
+          functionButton: styles.darkFunctionButton,
+          specialButton: styles.darkSpecialButton,
+          numberText: styles.darkNumberText,
+          operatorText: styles.darkOperatorText,
+          functionText: styles.darkFunctionText,
+          specialText: styles.darkSpecialText,
+        };
     }
   };
 
   const getIcon = () => {
-    if (!icon) return null;
+    if (!icon) return label;
     
     const iconMap: Record<string, string> = {
       'backspace': '⌫',
@@ -59,80 +145,148 @@ export const Button: React.FC<ButtonProps> = ({
       'decimal': '.',
     };
     
-    return iconMap[icon] || icon;
+    return iconMap[icon] || label;
   };
 
   return (
-    <motion.button
-      className={getButtonClass()}
-      onClick={onClick}
-      disabled={disabled}
-      whileHover={{ 
-        scale: disabled ? 1 : 1.05,
-        y: disabled ? 0 : -2
-      }}
-      whileTap={{ 
-        scale: disabled ? 1 : 0.95,
-        y: disabled ? 0 : 0
-      }}
-      animate={{
-        boxShadow: isActive 
-          ? '0 0 20px rgba(59, 130, 246, 0.6)' 
-          : '0 4px 15px rgba(0, 0, 0, 0.2)',
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 17
-      }}
+    <Animated.View
+      style={[
+        { transform: [{ scale: scaleAnim }], opacity: opacityAnim },
+        isActive && styles.activeButton
+      ]}
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent rounded-xl" />
-      
-      {/* Hover effect */}
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-xl opacity-0"
-        whileHover={{ opacity: 1 }}
-        transition={{ duration: 0.2 }}
-      />
-      
-      {/* Active state glow */}
-      {isActive && (
-        <motion.div
-          className="absolute inset-0 rounded-xl"
-          animate={{
-            boxShadow: [
-              '0 0 0px rgba(59, 130, 246, 0.4)',
-              '0 0 20px rgba(59, 130, 246, 0.6)',
-              '0 0 0px rgba(59, 130, 246, 0.4)',
-            ],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut"
-          }}
-        />
-      )}
-      
-      {/* Button content */}
-      <div className="relative z-10 flex items-center justify-center h-full">
-        {icon ? (
-          <span className="text-xl font-bold">{getIcon()}</span>
-        ) : (
-          <span className="text-lg font-semibold">{label}</span>
-        )}
-      </div>
-      
-      {/* Ripple effect */}
-      {isAnimating && (
-        <motion.div
-          className="absolute inset-0 bg-white/30 rounded-xl"
-          initial={{ scale: 0, opacity: 0.8 }}
-          animate={{ scale: 1.2, opacity: 0 }}
-          transition={{ duration: 0.4 }}
-        />
-      )}
-    </motion.button>
+      <TouchableOpacity
+        style={getButtonStyles()}
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        activeOpacity={0.8}
+      >
+        <Text style={getTextStyles()}>
+          {getIcon()}
+        </Text>
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
+
+const styles = StyleSheet.create({
+  button: {
+    height: 70,
+    margin: 4,
+    borderRadius: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+  },
+  buttonText: {
+    fontSize: 24,
+    fontWeight: '600',
+  },
+  activeButton: {
+    elevation: 8,
+    shadowOpacity: 0.4,
+  },
+  
+  // Dark theme styles
+  darkNumberButton: {
+    backgroundColor: '#374151',
+  },
+  darkOperatorButton: {
+    backgroundColor: '#F59E0B',
+  },
+  darkFunctionButton: {
+    backgroundColor: '#6B7280',
+  },
+  darkSpecialButton: {
+    backgroundColor: '#3B82F6',
+  },
+  darkNumberText: {
+    color: '#FFFFFF',
+  },
+  darkOperatorText: {
+    color: '#FFFFFF',
+  },
+  darkFunctionText: {
+    color: '#FFFFFF',
+  },
+  darkSpecialText: {
+    color: '#FFFFFF',
+  },
+  
+  // Light theme styles
+  lightNumberButton: {
+    backgroundColor: '#F3F4F6',
+  },
+  lightOperatorButton: {
+    backgroundColor: '#F59E0B',
+  },
+  lightFunctionButton: {
+    backgroundColor: '#E5E7EB',
+  },
+  lightSpecialButton: {
+    backgroundColor: '#3B82F6',
+  },
+  lightNumberText: {
+    color: '#1F2937',
+  },
+  lightOperatorText: {
+    color: '#FFFFFF',
+  },
+  lightFunctionText: {
+    color: '#374151',
+  },
+  lightSpecialText: {
+    color: '#FFFFFF',
+  },
+  
+  // Neon theme styles
+  neonNumberButton: {
+    backgroundColor: 'rgba(147, 51, 234, 0.8)',
+    borderWidth: 1,
+    borderColor: '#EC4899',
+  },
+  neonOperatorButton: {
+    backgroundColor: 'rgba(236, 72, 153, 0.8)',
+    borderWidth: 1,
+    borderColor: '#F59E0B',
+  },
+  neonFunctionButton: {
+    backgroundColor: 'rgba(59, 130, 246, 0.8)',
+    borderWidth: 1,
+    borderColor: '#10B981',
+  },
+  neonSpecialButton: {
+    backgroundColor: 'rgba(16, 185, 129, 0.8)',
+    borderWidth: 1,
+    borderColor: '#F59E0B',
+  },
+  neonNumberText: {
+    color: '#FFFFFF',
+    textShadowColor: '#EC4899',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 5,
+  },
+  neonOperatorText: {
+    color: '#FFFFFF',
+    textShadowColor: '#F59E0B',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 5,
+  },
+  neonFunctionText: {
+    color: '#FFFFFF',
+    textShadowColor: '#10B981',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 5,
+  },
+  neonSpecialText: {
+    color: '#FFFFFF',
+    textShadowColor: '#F59E0B',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 5,
+  },
+});

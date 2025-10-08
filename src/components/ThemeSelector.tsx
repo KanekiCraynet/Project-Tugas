@@ -1,96 +1,190 @@
 import React from 'react';
-import { motion } from 'framer-motion';
-import { Sun, Moon, Zap } from 'lucide-react';
+import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 interface ThemeSelectorProps {
   currentTheme: 'light' | 'dark' | 'neon';
   onThemeChange: (theme: 'light' | 'dark' | 'neon') => void;
+  theme: 'light' | 'dark' | 'neon';
 }
 
 const themes = [
   {
     id: 'dark' as const,
     name: 'Dark',
-    icon: Moon,
-    gradient: 'from-slate-800 to-slate-900',
+    emoji: '🌙',
     description: 'Tema gelap yang nyaman untuk mata'
   },
   {
     id: 'light' as const,
     name: 'Light',
-    icon: Sun,
-    gradient: 'from-blue-50 to-indigo-100',
+    emoji: '☀️',
     description: 'Tema terang yang bersih'
   },
   {
     id: 'neon' as const,
     name: 'Neon',
-    icon: Zap,
-    gradient: 'from-purple-900 via-pink-900 to-red-900',
+    emoji: '⚡',
     description: 'Tema neon yang futuristik'
   }
 ];
 
 export const ThemeSelector: React.FC<ThemeSelectorProps> = ({
   currentTheme,
-  onThemeChange
+  onThemeChange,
+  theme
 }) => {
+  const getThemeStyles = () => {
+    switch (theme) {
+      case 'light':
+        return {
+          container: styles.lightContainer,
+          button: styles.lightButton,
+          activeButton: styles.lightActiveButton,
+          text: styles.lightText,
+          activeText: styles.lightActiveText,
+        };
+      case 'neon':
+        return {
+          container: styles.neonContainer,
+          button: styles.neonButton,
+          activeButton: styles.neonActiveButton,
+          text: styles.neonText,
+          activeText: styles.neonActiveText,
+        };
+      default:
+        return {
+          container: styles.darkContainer,
+          button: styles.darkButton,
+          activeButton: styles.darkActiveButton,
+          text: styles.darkText,
+          activeText: styles.darkActiveText,
+        };
+    }
+  };
+
+  const themeStyles = getThemeStyles();
+
   return (
-    <div className="flex items-center space-x-2">
-      {themes.map((theme) => {
-        const Icon = theme.icon;
-        const isActive = currentTheme === theme.id;
+    <View style={[styles.container, themeStyles.container]}>
+      {themes.map((themeOption) => {
+        const isActive = currentTheme === themeOption.id;
         
         return (
-          <motion.button
-            key={theme.id}
-            className={`relative p-2 rounded-lg transition-all duration-300 ${
-              isActive 
-                ? 'bg-white/20 shadow-lg' 
-                : 'bg-white/10 hover:bg-white/15'
-            }`}
-            onClick={() => onThemeChange(theme.id)}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            title={theme.description}
+          <TouchableOpacity
+            key={themeOption.id}
+            style={[
+              styles.button,
+              themeStyles.button,
+              isActive && themeStyles.activeButton
+            ]}
+            onPress={() => onThemeChange(themeOption.id)}
+            activeOpacity={0.7}
           >
-            <Icon 
-              className={`w-4 h-4 transition-colors ${
-                isActive ? 'text-white' : 'text-gray-400'
-              }`} 
-            />
-            
-            {/* Active indicator */}
-            {isActive && (
-              <motion.div
-                className="absolute inset-0 rounded-lg border-2 border-blue-400"
-                layoutId="activeTheme"
-                initial={false}
-                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-              />
-            )}
-            
-            {/* Glow effect for active theme */}
-            {isActive && (
-              <motion.div
-                className="absolute inset-0 rounded-lg opacity-50"
-                animate={{
-                  boxShadow: [
-                    '0 0 0px rgba(59, 130, 246, 0.4)',
-                    '0 0 10px rgba(59, 130, 246, 0.6)',
-                    '0 0 0px rgba(59, 130, 246, 0.4)',
-                  ],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-            )}
-          </motion.button>
+            <Text style={styles.emoji}>{themeOption.emoji}</Text>
+            <Text style={[
+              styles.text,
+              themeStyles.text,
+              isActive && themeStyles.activeText
+            ]}>
+              {themeOption.name}
+            </Text>
+          </TouchableOpacity>
         );
       })}
-    </div>
+    </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    borderRadius: 12,
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  button: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    marginHorizontal: 4,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  emoji: {
+    fontSize: 16,
+    marginRight: 6,
+  },
+  text: {
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  
+  // Dark theme styles
+  darkContainer: {
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  darkButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  darkActiveButton: {
+    backgroundColor: 'rgba(59, 130, 246, 0.3)',
+    borderColor: '#3B82F6',
+  },
+  darkText: {
+    color: '#9CA3AF',
+  },
+  darkActiveText: {
+    color: '#FFFFFF',
+  },
+  
+  // Light theme styles
+  lightContainer: {
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+  },
+  lightButton: {
+    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  lightActiveButton: {
+    backgroundColor: 'rgba(59, 130, 246, 0.2)',
+    borderColor: '#3B82F6',
+  },
+  lightText: {
+    color: '#6B7280',
+  },
+  lightActiveText: {
+    color: '#1F2937',
+  },
+  
+  // Neon theme styles
+  neonContainer: {
+    backgroundColor: 'rgba(147, 51, 234, 0.3)',
+    borderWidth: 1,
+    borderColor: 'rgba(236, 72, 153, 0.5)',
+  },
+  neonButton: {
+    backgroundColor: 'rgba(236, 72, 153, 0.2)',
+    borderColor: 'rgba(236, 72, 153, 0.4)',
+  },
+  neonActiveButton: {
+    backgroundColor: 'rgba(16, 185, 129, 0.4)',
+    borderColor: '#10B981',
+  },
+  neonText: {
+    color: '#FBBF24',
+  },
+  neonActiveText: {
+    color: '#FFFFFF',
+    textShadowColor: '#10B981',
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 3,
+  },
+});

@@ -1,43 +1,32 @@
 {
-  "name": "modern-calculator",
+  "name": "kalkulator-modern",
   "version": "1.0.0",
-  "description": "Aplikasi Kalkulator Modern dengan UI yang Menarik",
-  "main": "index.js",
+  "description": "Aplikasi Kalkulator Modern untuk Android - Project Mata Kuliah Bergerak",
+  "main": "index.ts",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build:preview": "npx eas build --platform android --profile preview",
+    "build:production": "npx eas build --platform android --profile production",
+    "build:apk": "./scripts/build-apk.sh",
+    "test": "expo start --web",
+    "lint": "npx tsc --noEmit"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "framer-motion": "^10.16.4",
-    "lucide-react": "^0.292.0",
-    "clsx": "^2.0.0"
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "expo": "~54.0.12",
+    "expo-status-bar": "~3.0.8",
+    "react": "19.1.0",
+    "react-native": "0.81.4",
+    "react-native-haptic-feedback": "^2.3.3",
+    "react-native-vector-icons": "^10.3.0"
   },
   "devDependencies": {
-    "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
-    "@typescript-eslint/eslint-plugin": "^6.10.0",
-    "@typescript-eslint/parser": "^6.10.0",
-    "@vitejs/plugin-react": "^4.1.1",
-    "autoprefixer": "^10.4.16",
-    "eslint": "^8.53.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.4",
-    "postcss": "^8.4.31",
-    "tailwindcss": "^3.3.5",
-    "typescript": "^5.2.2",
-    "vite": "^4.5.0"
+    "@types/react": "~19.1.0",
+    "eas-cli": "^16.20.4",
+    "typescript": "~5.9.2"
   },
-  "keywords": [
-    "calculator",
-    "react",
-    "typescript",
-    "modern-ui",
-    "mobile-responsive"
-  ],
-  "author": "Zenzee",
-  "license": "MIT"
+  "private": true
 }

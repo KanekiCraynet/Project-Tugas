@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CalculatorState, Operation, CalculationHistory } from '../types/calculator';
 import { CalculatorEngine } from '../utils/calculator';
 
@@ -15,13 +16,23 @@ const initialState: CalculatorState = {
 export const useCalculator = () => {
   const [state, setState] = useState<CalculatorState>(initialState);
   const calculator = useRef(CalculatorEngine.getInstance());
-  const [isAnimating, setIsAnimating] = useState(false);
 
-  // Load history from localStorage on mount
+  // Load data from AsyncStorage on mount
   useEffect(() => {
-    const savedHistory = localStorage.getItem('calculator-history');
-    if (savedHistory) {
-      try {
+    loadData();
+  }, []);
+
+  // Save data to AsyncStorage whenever state changes
+  useEffect(() => {
+    saveData();
+  }, [state.history, state.theme]);
+
+  const loadData = async () => {
+    try {
+      const savedHistory = await AsyncStorage.getItem('calculator-history');
+      const savedTheme = await AsyncStorage.getItem('calculator-theme');
+      
+      if (savedHistory) {
         const parsed = JSON.parse(savedHistory);
         setState(prev => ({
           ...prev,
@@ -30,18 +41,24 @@ export const useCalculator = () => {
             timestamp: new Date(item.timestamp)
           }))
         }));
-      } catch (error) {
-        console.error('Error loading calculator history:', error);
       }
+      
+      if (savedTheme) {
+        setState(prev => ({ ...prev, theme: savedTheme as 'light' | 'dark' | 'neon' }));
+      }
+    } catch (error) {
+      console.error('Error loading calculator data:', error);
     }
-  }, []);
+  };
 
-  // Save history to localStorage whenever it changes
-  useEffect(() => {
-    if (state.history.length > 0) {
-      localStorage.setItem('calculator-history', JSON.stringify(state.history));
+  const saveData = async () => {
+    try {
+      await AsyncStorage.setItem('calculator-history', JSON.stringify(state.history));
+      await AsyncStorage.setItem('calculator-theme', state.theme);
+    } catch (error) {
+      console.error('Error saving calculator data:', error);
     }
-  }, [state.history]);
+  };
 
   const addToHistory = useCallback((expression: string, result: string) => {
     const historyEntry = calculator.current.createHistoryEntry(expression, result);
@@ -53,13 +70,10 @@ export const useCalculator = () => {
 
   const clearHistory = useCallback(() => {
     setState(prev => ({ ...prev, history: [] }));
-    localStorage.removeItem('calculator-history');
+    AsyncStorage.removeItem('calculator-history');
   }, []);
 
   const inputNumber = useCallback((num: string) => {
-    setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 200);
-
     setState(prev => {
       if (prev.isError) {
         return {
@@ -115,9 +129,6 @@ export const useCalculator = () => {
   }, []);
 
   const performOperation = useCallback((nextOperation: Operation) => {
-    setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 200);
-
     setState(prev => {
       const inputValue = parseFloat(prev.display);
 
@@ -173,9 +184,6 @@ export const useCalculator = () => {
   }, [addToHistory]);
 
   const performFunction = useCallback((func: string) => {
-    setIsAnimating(true);
-    setTimeout(() => setIsAnimating(false), 200);
-
     setState(prev => {
       const inputValue = parseFloat(prev.display);
 
@@ -276,20 +284,10 @@ export const useCalculator = () => {
 
   const setTheme = useCallback((theme: 'light' | 'dark' | 'neon') => {
     setState(prev => ({ ...prev, theme }));
-    localStorage.setItem('calculator-theme', theme);
   }, []);
-
-  // Load theme from localStorage on mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('calculator-theme') as 'light' | 'dark' | 'neon';
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
-  }, [setTheme]);
 
   return {
     state,
-    isAnimating,
     inputNumber,
     inputDecimal,
     performOperation,

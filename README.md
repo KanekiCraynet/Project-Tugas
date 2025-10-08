@@ -1,15 +1,15 @@
-# 🧮 Kalkulator Modern - Project Mata Kuliah Bergerak
+# 🧮 Kalkulator Modern - Mobile App
 
-Aplikasi kalkulator modern dengan UI yang menarik dan fitur lengkap, dibangun menggunakan React, TypeScript, dan Tailwind CSS.
+Aplikasi kalkulator modern untuk Android dengan UI yang menarik dan fitur lengkap, dibangun menggunakan React Native dan Expo.
 
 ## ✨ Fitur Utama
 
 ### 🎨 UI/UX Modern
-- **Design Responsif**: Tampilan yang optimal di desktop dan mobile
+- **Design Responsif**: Tampilan yang optimal di semua ukuran layar Android
 - **3 Tema**: Dark, Light, dan Neon dengan transisi yang smooth
-- **Animasi Interaktif**: Framer Motion untuk transisi dan efek visual
-- **Glass Effect**: Efek kaca modern dengan backdrop blur
-- **Gradient Background**: Background gradient yang dinamis
+- **Animasi Native**: Animasi yang smooth menggunakan React Native Animated API
+- **Touch Feedback**: Haptic feedback dan visual feedback untuk interaksi
+- **Material Design**: Mengikuti prinsip Material Design untuk Android
 
 ### 🧮 Fungsi Kalkulator
 - **Operasi Dasar**: Penjumlahan, pengurangan, perkalian, pembagian
@@ -18,32 +18,36 @@ Aplikasi kalkulator modern dengan UI yang menarik dan fitur lengkap, dibangun me
 - **Operasi Lanjutan**: Toggle tanda, clear entry, backspace
 - **Validasi Input**: Penanganan error dan input yang tidak valid
 
-### 📊 Fitur Tambahan
+### 📱 Fitur Mobile
 - **Riwayat Perhitungan**: Simpan dan akses 50 perhitungan terakhir
-- **Copy to Clipboard**: Salin hasil perhitungan dengan mudah
-- **Local Storage**: Data tersimpan otomatis di browser
-- **Responsive Design**: Optimal di semua ukuran layar
+- **AsyncStorage**: Data tersimpan otomatis di device
+- **Haptic Feedback**: Getaran saat menekan tombol (opsional)
+- **Portrait Mode**: Optimized untuk penggunaan portrait
+- **Touch Optimized**: Tombol yang mudah disentuh dengan ukuran optimal
 
 ## 🚀 Teknologi yang Digunakan
 
-- **React 18**: Library UI modern dengan hooks
+- **React Native**: Framework untuk aplikasi mobile cross-platform
+- **Expo**: Platform untuk development dan deployment React Native
 - **TypeScript**: Type safety dan developer experience yang lebih baik
-- **Tailwind CSS**: Utility-first CSS framework
-- **Framer Motion**: Library animasi untuk React
-- **Vite**: Build tool yang cepat dan modern
-- **Lucide React**: Icon library yang modern
+- **AsyncStorage**: Local storage untuk React Native
+- **React Native Animated**: Animasi native yang performant
+- **React Native Haptic Feedback**: Haptic feedback untuk Android
 
 ## 📦 Instalasi dan Setup
 
 ### Prerequisites
 - Node.js (versi 16 atau lebih baru)
 - npm atau yarn
+- Expo CLI (akan diinstall otomatis)
+- Android Studio (untuk testing di emulator, opsional)
+- Expo Go app (untuk testing di device fisik)
 
 ### Langkah Instalasi
 
 1. **Clone atau download project**
    ```bash
-   cd /home/zenzee/Dokumen/GitHub/Project-Tugas
+   cd /home/zenzee/Dokumen/GitHub/Project-Tugas/calculator-mobile
    ```
 
 2. **Install dependencies**
@@ -53,47 +57,77 @@ Aplikasi kalkulator modern dengan UI yang menarik dan fitur lengkap, dibangun me
 
 3. **Jalankan development server**
    ```bash
-   npm run dev
+   npx expo start
    ```
 
-4. **Buka browser**
+4. **Testing di device**
+   - Install Expo Go app di Android device
+   - Scan QR code yang muncul di terminal
+   - Aplikasi akan terbuka di device
+
+### Build APK
+
+#### Menggunakan EAS Build (Recommended)
+
+1. **Install EAS CLI**
+   ```bash
+   npm install -g @expo/eas-cli
    ```
-   http://localhost:3000
+
+2. **Login ke Expo**
+   ```bash
+   eas login
    ```
 
-### Build untuk Production
+3. **Configure project**
+   ```bash
+   eas build:configure
+   ```
 
-```bash
-npm run build
-```
+4. **Build APK**
+   ```bash
+   # Build untuk testing
+   eas build --platform android --profile preview
+   
+   # Build untuk production
+   eas build --platform android --profile production
+   ```
 
-File hasil build akan tersimpan di folder `dist/`.
+5. **Download APK**
+   - APK akan tersedia di Expo dashboard
+   - Download dan install di Android device
+
+#### Build Lokal (Advanced)
+
+1. **Install Android Studio**
+2. **Setup Android SDK**
+3. **Configure environment variables**
+4. **Build dengan Expo**
+   ```bash
+   npx expo run:android
+   ```
 
 ## 🏗️ Struktur Project
 
 ```
-Project-Tugas/
-├── public/                 # Static assets
+calculator-mobile/
+├── assets/                 # Static assets (icons, images)
 ├── src/
-│   ├── components/         # Komponen React
+│   ├── components/         # Komponen React Native
 │   │   ├── Button.tsx      # Komponen tombol dengan animasi
 │   │   ├── ButtonGrid.tsx  # Grid layout untuk tombol
 │   │   ├── Display.tsx     # Layar kalkulator
-│   │   ├── HistoryPanel.tsx # Panel riwayat perhitungan
 │   │   └── ThemeSelector.tsx # Pemilih tema
 │   ├── hooks/              # Custom React hooks
 │   │   └── useCalculator.ts # Hook utama untuk logika kalkulator
 │   ├── types/              # TypeScript type definitions
 │   │   └── calculator.ts   # Interface dan types
-│   ├── utils/              # Utility functions
-│   │   └── calculator.ts   # Engine kalkulator
-│   ├── App.tsx             # Komponen utama
-│   ├── main.tsx            # Entry point
-│   └── index.css           # Global styles
-├── package.json            # Dependencies dan scripts
-├── tailwind.config.js      # Konfigurasi Tailwind
-├── tsconfig.json           # Konfigurasi TypeScript
-└── vite.config.ts          # Konfigurasi Vite
+│   └── utils/              # Utility functions
+│       └── calculator.ts   # Engine kalkulator
+├── App.tsx                 # Komponen utama
+├── app.json                # Konfigurasi Expo
+├── eas.json                # Konfigurasi EAS Build
+└── package.json            # Dependencies dan scripts
 ```
 
 ## 🎯 Fitur Detail
@@ -102,108 +136,106 @@ Project-Tugas/
 - **Singleton Pattern**: Instance tunggal untuk konsistensi
 - **Error Handling**: Penanganan error yang robust
 - **Number Formatting**: Format angka yang user-friendly
-- **Expression Parser**: Parser ekspresi matematika yang aman
+- **Memory Management**: Efficient memory usage
 
 ### State Management
 - **React Hooks**: useState dan useCallback untuk state management
-- **Local Storage**: Persistensi data riwayat dan tema
+- **AsyncStorage**: Persistensi data riwayat dan tema
 - **Type Safety**: Full TypeScript support
 
 ### Animasi dan Interaksi
-- **Button Animations**: Hover, tap, dan ripple effects
+- **Button Animations**: Scale dan opacity animations
 - **Display Transitions**: Smooth transitions untuk perubahan nilai
-- **Panel Animations**: Slide dan fade animations untuk panel
 - **Theme Transitions**: Smooth transitions antar tema
+- **Haptic Feedback**: Getaran saat interaksi (Android)
 
 ## 🎨 Tema dan Styling
 
 ### Tema yang Tersedia
 1. **Dark Theme** (Default)
-   - Background: Gradient dari slate-900 ke purple-900
+   - Background: Gradient gelap
    - Warna: Biru dan ungu dengan aksen
 
 2. **Light Theme**
-   - Background: Gradient dari blue-50 ke purple-50
-   - Warna: Biru dan indigo yang lembut
+   - Background: Gradient terang
+   - Warna: Biru dan abu-abu yang lembut
 
 3. **Neon Theme**
-   - Background: Gradient dari purple-900 ke red-900
-   - Warna: Pink dan merah dengan efek neon
+   - Background: Gradient neon
+   - Warna: Pink dan ungu dengan efek glow
 
-### Custom CSS Classes
-- `.glass-effect`: Efek kaca dengan backdrop blur
-- `.button-primary`: Style untuk tombol utama
-- `.button-secondary`: Style untuk tombol sekunder
-- `.button-operator`: Style untuk tombol operator
-- `.button-number`: Style untuk tombol angka
+### Styling Approach
+- **StyleSheet**: Native styling untuk performa optimal
+- **Theme-based**: Dynamic styling berdasarkan tema
+- **Responsive**: Adaptif untuk berbagai ukuran layar
+- **Accessibility**: Support untuk accessibility features
 
-## 📱 Responsive Design
+## 📱 Android Features
 
-- **Mobile First**: Design dimulai dari mobile
-- **Breakpoints**: Responsive di semua ukuran layar
-- **Touch Friendly**: Tombol yang mudah disentuh
-- **Viewport Meta**: Optimized untuk mobile
+### Permissions
+- **VIBRATE**: Untuk haptic feedback
+- **INTERNET**: Untuk EAS Build (opsional)
 
-## 🔧 Konfigurasi
-
-### Tailwind CSS
-- Custom color palette
-- Extended animations
-- Custom utilities
-- Responsive breakpoints
-
-### TypeScript
-- Strict mode enabled
-- Path mapping
-- Modern ES features
-- React JSX support
-
-### Vite
-- Fast HMR (Hot Module Replacement)
-- Optimized build
-- Development server
-- Plugin ecosystem
+### Performance
+- **Native Animations**: Menggunakan native driver
+- **Optimized Rendering**: Efficient re-rendering
+- **Memory Management**: Proper cleanup dan optimization
 
 ## 🚀 Deployment
 
-### Vercel (Recommended)
-1. Push code ke GitHub
-2. Connect repository ke Vercel
-3. Deploy otomatis
+### EAS Build (Recommended)
+1. Setup EAS project
+2. Configure build profiles
+3. Build APK/AAB
+4. Download dan distribute
 
-### Netlify
-1. Build project: `npm run build`
-2. Upload folder `dist/` ke Netlify
-3. Configure redirects untuk SPA
+### Google Play Store
+1. Build production APK/AAB
+2. Create developer account
+3. Upload ke Play Console
+4. Submit untuk review
 
-### GitHub Pages
-1. Install gh-pages: `npm install --save-dev gh-pages`
-2. Add script: `"deploy": "gh-pages -d dist"`
-3. Run: `npm run build && npm run deploy`
+### Direct Distribution
+1. Build APK
+2. Share file APK
+3. Install manual di device
 
 ## 🧪 Testing
 
+### Development Testing
 ```bash
-# Run linting
-npm run lint
+# Start development server
+npx expo start
 
-# Type checking
-npx tsc --noEmit
+# Test di web browser
+npx expo start --web
+
+# Test di Android emulator
+npx expo start --android
+```
+
+### Production Testing
+```bash
+# Build preview APK
+eas build --platform android --profile preview
+
+# Test APK di device
+# Install dan test semua fitur
 ```
 
 ## 📈 Performance
 
-- **Bundle Size**: Optimized dengan Vite
-- **Code Splitting**: Automatic code splitting
-- **Tree Shaking**: Unused code elimination
-- **Minification**: Production build optimization
+- **Bundle Size**: Optimized dengan Expo
+- **Startup Time**: Fast app startup
+- **Memory Usage**: Efficient memory management
+- **Battery Usage**: Optimized untuk battery life
 
 ## 🔒 Security
 
 - **Input Validation**: Validasi input yang ketat
-- **XSS Protection**: Sanitasi input
-- **Safe Evaluation**: Parser ekspresi yang aman
+- **Safe Storage**: Secure local storage
 - **Type Safety**: TypeScript untuk type safety
+- **Error Handling**: Proper error handling
 
 ## 🤝 Contributing
 
@@ -223,14 +255,41 @@ MIT License - bebas digunakan untuk keperluan akademik dan komersial.
 
 ## 🙏 Acknowledgments
 
-- React team untuk framework yang luar biasa
-- Tailwind CSS untuk utility-first CSS
-- Framer Motion untuk animasi yang smooth
-- Lucide untuk icon yang modern
-- Vite untuk build tool yang cepat
+- React Native team untuk framework yang luar biasa
+- Expo team untuk platform yang powerful
+- React Native community untuk dukungan dan resources
+
+## 📞 Support
+
+Untuk pertanyaan atau masalah:
+1. Check dokumentasi ini
+2. Search di GitHub issues
+3. Create new issue jika diperlukan
 
 ---
 
-**Selamat menggunakan Kalkulator Modern! 🎉**
+**Selamat menggunakan Kalkulator Modern Mobile! 🎉**
 
-Untuk pertanyaan atau feedback, silakan buat issue di repository ini.
+### Quick Start Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Start development
+npx expo start
+
+# Build APK
+eas build --platform android --profile preview
+
+# Test di web
+npx expo start --web
+```
+
+### Tips Penggunaan
+
+1. **Testing**: Gunakan Expo Go app untuk testing cepat
+2. **Build**: Gunakan EAS Build untuk build APK yang optimal
+3. **Themes**: Switch tema untuk pengalaman yang berbeda
+4. **History**: Akses riwayat perhitungan dengan mudah
+5. **Performance**: Aplikasi dioptimalkan untuk performa yang smooth

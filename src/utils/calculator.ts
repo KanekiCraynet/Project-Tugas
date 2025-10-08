@@ -95,35 +95,6 @@ export class CalculatorEngine {
     };
   }
 
-  public validateInput(value: string): boolean {
-    // Check for valid number format
-    const numberRegex = /^-?\d*\.?\d*$/;
-    return numberRegex.test(value) || value === '';
-  }
-
-  public parseExpression(expression: string): { isValid: boolean; result?: number; error?: string } {
-    try {
-      // Simple expression parser for basic operations
-      const cleanExpression = expression.replace(/[^0-9+\-*/().]/g, '');
-      
-      // Security check - only allow safe characters
-      if (cleanExpression !== expression) {
-        return { isValid: false, error: 'Invalid characters in expression' };
-      }
-
-      // Use Function constructor for safe evaluation
-      const result = Function(`"use strict"; return (${cleanExpression})`)();
-      
-      if (typeof result !== 'number' || !isFinite(result)) {
-        return { isValid: false, error: 'Invalid calculation result' };
-      }
-
-      return { isValid: true, result };
-    } catch (error) {
-      return { isValid: false, error: 'Invalid expression' };
-    }
-  }
-
   public getConstants(): Record<string, number> {
     return {
       'π': Math.PI,
@@ -132,35 +103,5 @@ export class CalculatorEngine {
       '√2': Math.sqrt(2),
       '√3': Math.sqrt(3)
     };
-  }
-
-  public convertUnits(value: number, fromUnit: string, toUnit: string): number {
-    const conversions: Record<string, Record<string, number>> = {
-      length: {
-        'm': 1,
-        'cm': 0.01,
-        'mm': 0.001,
-        'km': 1000,
-        'in': 0.0254,
-        'ft': 0.3048,
-        'yd': 0.9144,
-        'mi': 1609.344
-      },
-      weight: {
-        'kg': 1,
-        'g': 0.001,
-        'mg': 0.000001,
-        'lb': 0.453592,
-        'oz': 0.0283495
-      },
-      temperature: {
-        'C': 1,
-        'F': 1,
-        'K': 1
-      }
-    };
-
-    // This is a simplified version - in a real app you'd have more comprehensive conversions
-    return value; // Placeholder
   }
 }
