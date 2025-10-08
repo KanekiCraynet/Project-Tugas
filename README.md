@@ -67,8 +67,8 @@
 
 1. **Clone repository**
 ```bash
-git clone https://github.com/yourusername/kalkulator-pro.git
-cd kalkulator-pro
+git clone https://github.com/KanekiCraynet/Project-Tugas.git
+cd Project-Tugas
 ```
 
 2. **Install dependencies**
@@ -320,8 +320,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- Email: your.email@example.com
+- GitHub: [@KanekiCraynet](https://github.com/KanekiCraynet)
+- Email: osanugroho03@gmail.com
 
 ## 🙏 Acknowledgments
 
@@ -334,9 +334,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 Jika Anda mengalami masalah atau memiliki pertanyaan:
 
-1. **Check Issues**: Lihat [Issues](https://github.com/yourusername/kalkulator-pro/issues)
+1. **Check Issues**: Lihat [Issues](https://github.com/KanekiCraynet/Project-Tugas/issues)
 2. **Create Issue**: Buat issue baru dengan detail yang jelas
-3. **Contact**: Email ke your.email@example.com
+3. **Contact**: Email ke osanugroho03@gmail.com
 
 ---
 
