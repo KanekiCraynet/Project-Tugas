@@ -137,6 +137,17 @@ export default function App() {
     }
   };
 
+  const getGradientStyle = () => {
+    switch (state.theme) {
+      case 'light':
+        return styles.lightGradient;
+      case 'neon':
+        return styles.neonGradient;
+      default:
+        return styles.darkGradient;
+    }
+  };
+
   const getStatusBarStyle = () => {
     switch (state.theme) {
       case 'light':
@@ -159,13 +170,23 @@ export default function App() {
         showsVerticalScrollIndicator={false}
       >
         {/* Header */}
-        <View style={styles.header}>
-          <Text style={[styles.title, getTextStyle()]}>
-            🧮 Kalkulator Modern
-          </Text>
-          <Text style={[styles.subtitle, getTextStyle()]}>
-            Project Mata Kuliah Bergerak
-          </Text>
+        <View style={[styles.header, getGradientStyle()]}>
+          <View style={styles.headerContent}>
+            <View style={styles.titleContainer}>
+              <Text style={[styles.title, getTextStyle()]}>
+                Kalkulator Pro
+              </Text>
+              <Text style={[styles.subtitle, getTextStyle()]}>
+                Scientific Calculator
+              </Text>
+            </View>
+            <View style={styles.statusIndicator}>
+              <View style={[styles.statusDot, { backgroundColor: state.isError ? '#EF4444' : '#10B981' }]} />
+              <Text style={[styles.statusText, getTextStyle()]}>
+                {state.isError ? 'Error' : 'Ready'}
+              </Text>
+            </View>
+          </View>
         </View>
 
         {/* Theme Selector */}
@@ -176,7 +197,7 @@ export default function App() {
         />
 
         {/* Calculator Container */}
-        <View style={[styles.calculatorContainer, getBackgroundStyle()]}>
+        <View style={[styles.calculatorContainer, getGradientStyle()]}>
           {/* Display */}
           <Display state={state} theme={state.theme} />
 
@@ -233,12 +254,12 @@ export default function App() {
         )}
 
         {/* Footer */}
-        <View style={styles.footer}>
+        <View style={[styles.footer, getGradientStyle()]}>
           <Text style={[styles.footerText, getTextStyle()]}>
-            Dibuat dengan React Native + TypeScript
+            Professional Calculator v2.0
           </Text>
           <Text style={[styles.footerSubtext, getTextStyle()]}>
-            Versi 1.0.0
+            Advanced Scientific Computing
           </Text>
         </View>
       </ScrollView>
@@ -255,28 +276,64 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   header: {
-    alignItems: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 16,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  subtitle: {
-    fontSize: 14,
-    opacity: 0.7,
-  },
-  calculatorContainer: {
+    paddingVertical: 24,
+    paddingHorizontal: 20,
+    borderRadius: 24,
     marginHorizontal: 16,
-    borderRadius: 20,
-    overflow: 'hidden',
+    marginTop: 16,
     elevation: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
+  },
+  headerContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  titleContainer: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '800',
+    marginBottom: 4,
+    letterSpacing: 0.5,
+  },
+  subtitle: {
+    fontSize: 16,
+    opacity: 0.8,
+    fontWeight: '500',
+  },
+  statusIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  statusDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    marginRight: 6,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  calculatorContainer: {
+    marginHorizontal: 16,
+    marginTop: 16,
+    borderRadius: 24,
+    overflow: 'hidden',
+    elevation: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
   },
   historySection: {
     margin: 16,
@@ -332,17 +389,27 @@ const styles = StyleSheet.create({
   },
   footer: {
     alignItems: 'center',
-    paddingVertical: 20,
-    paddingHorizontal: 16,
+    paddingVertical: 24,
+    paddingHorizontal: 20,
+    marginHorizontal: 16,
+    marginTop: 16,
+    borderRadius: 20,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
   },
   footerText: {
-    fontSize: 12,
-    opacity: 0.7,
+    fontSize: 14,
+    opacity: 0.8,
     marginBottom: 4,
+    fontWeight: '600',
   },
   footerSubtext: {
-    fontSize: 10,
-    opacity: 0.5,
+    fontSize: 12,
+    opacity: 0.6,
+    fontWeight: '500',
   },
   
   // Background styles
@@ -354,6 +421,23 @@ const styles = StyleSheet.create({
   },
   neonBackground: {
     backgroundColor: '#1E1B4B',
+  },
+  
+  // Gradient styles
+  darkGradient: {
+    backgroundColor: '#1E293B',
+    borderWidth: 1,
+    borderColor: 'rgba(148, 163, 184, 0.1)',
+  },
+  lightGradient: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: 'rgba(148, 163, 184, 0.2)',
+  },
+  neonGradient: {
+    backgroundColor: '#312E81',
+    borderWidth: 1,
+    borderColor: 'rgba(236, 72, 153, 0.3)',
   },
   
   // Text styles
