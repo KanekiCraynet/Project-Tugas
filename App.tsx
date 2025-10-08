@@ -29,7 +29,14 @@ export default function App() {
     insertConstant,
     deleteLastChar,
     clearHistory,
-    setTheme
+    setTheme,
+    memoryClear,
+    memoryRecall,
+    memoryAdd,
+    memorySubtract,
+    memoryStore,
+    power,
+    nthRoot
   } = useCalculator();
 
   const [showHistory, setShowHistory] = useState(false);
