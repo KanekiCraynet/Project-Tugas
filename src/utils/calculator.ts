@@ -87,7 +87,7 @@ export class CalculatorEngine {
           return value;
       }
     } catch (error) {
-      throw new Error(`Function error: ${error.message}`);
+      throw new Error(`Function error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
