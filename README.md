@@ -112,7 +112,7 @@ npm run build:apk
 ## 📁 Project Structure
 
 ```
-kalkulator-pro/
+Project-Tugas/
 ├── src/
 │   ├── components/          # React components
 │   │   ├── Button.tsx       # Button component dengan animations
