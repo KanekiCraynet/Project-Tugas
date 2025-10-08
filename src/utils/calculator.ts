@@ -186,7 +186,7 @@ export class CalculatorEngine {
       const tokens = this.tokenizeExpression(expression);
       return this.evaluateTokens(tokens);
     } catch (error) {
-      throw new Error(`Expression error: ${error.message}`);
+      throw new Error(`Expression error: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
