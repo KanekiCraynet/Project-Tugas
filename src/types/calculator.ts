@@ -23,4 +23,15 @@ export interface ButtonConfig {
   flex?: number;
 }
 
-export type Operation = '+' | '-' | '*' | '/' | '=' | 'C' | 'CE' | '±' | '%' | '√' | 'x²' | '1/x' | 'π' | 'e';
+export type Operation = '+' | '-' | '*' | '/' | '=' | 'C' | 'CE' | '±' | '%' | '√' | 'x²' | '1/x' | 'π' | 'e' | 'sin' | 'cos' | 'tan' | 'log' | 'ln';
+
+export interface MemoryState {
+  value: number;
+  isSet: boolean;
+}
+
+export interface CalculatorSettings {
+  precision: number;
+  angleMode: 'degrees' | 'radians';
+  numberFormat: 'auto' | 'scientific' | 'fixed';
+}
