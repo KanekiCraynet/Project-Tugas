@@ -12,19 +12,19 @@ const themes = [
     id: 'dark' as const,
     name: 'Dark',
     emoji: '🌙',
-    description: 'Tema gelap yang nyaman untuk mata'
+    description: 'Professional dark theme'
   },
   {
     id: 'light' as const,
     name: 'Light',
     emoji: '☀️',
-    description: 'Tema terang yang bersih'
+    description: 'Clean light theme'
   },
   {
     id: 'neon' as const,
     name: 'Neon',
     emoji: '⚡',
-    description: 'Tema neon yang futuristik'
+    description: 'Futuristic neon theme'
   }
 ];
 

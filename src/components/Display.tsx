@@ -87,38 +87,42 @@ export const Display: React.FC<DisplayProps> = ({ state, theme }) => {
     <View style={[styles.container, themeStyles.container]}>
       {/* Previous operation display */}
       {state.previousValue !== null && state.operation && (
-        <Text style={[styles.subText, themeStyles.subText]}>
-          {state.previousValue} {state.operation}
-        </Text>
+        <View style={styles.operationContainer}>
+          <Text style={[styles.subText, themeStyles.subText]}>
+            {state.previousValue} {state.operation}
+          </Text>
+        </View>
       )}
 
       {/* Main display */}
-      <Animated.Text
-        style={[
-          styles.mainText,
-          themeStyles.text,
-          { fontSize: getFontSize() },
-          { transform: [{ scale: scaleAnim }] }
-        ]}
-      >
-        {getDisplayText()}
-      </Animated.Text>
+      <View style={styles.displayContainer}>
+        <Animated.Text
+          style={[
+            styles.mainText,
+            themeStyles.text,
+            { fontSize: getFontSize() },
+            { transform: [{ scale: scaleAnim }] }
+          ]}
+        >
+          {getDisplayText()}
+        </Animated.Text>
+      </View>
 
       {/* Status indicators */}
       <View style={styles.statusContainer}>
         <View style={styles.statusItem}>
-          {state.waitingForOperand && (
-            <View style={[styles.statusDot, { backgroundColor: '#10B981' }]} />
-          )}
+          <View style={[styles.statusDot, { 
+            backgroundColor: state.waitingForOperand ? '#F59E0B' : '#10B981' 
+          }]} />
           <Text style={[styles.statusText, themeStyles.statusText]}>
-            {state.waitingForOperand ? 'Waiting' : 'Ready'}
+            {state.waitingForOperand ? 'Input' : 'Ready'}
           </Text>
         </View>
         
         <View style={styles.statusItem}>
           <View style={[styles.statusDot, { backgroundColor: '#3B82F6' }]} />
           <Text style={[styles.statusText, themeStyles.statusText]}>
-            v1.0
+            v2.0
           </Text>
         </View>
       </View>
@@ -128,45 +132,53 @@ export const Display: React.FC<DisplayProps> = ({ state, theme }) => {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
-    borderRadius: 20,
-    margin: 16,
-    minHeight: 140,
-    justifyContent: 'flex-end',
+    padding: 28,
+    borderRadius: 24,
+    margin: 20,
+    minHeight: 160,
+    justifyContent: 'space-between',
   },
   darkContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(15, 23, 42, 0.8)',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(148, 163, 184, 0.2)',
   },
   lightContainer: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(248, 250, 252, 0.95)',
     borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
+    borderColor: 'rgba(148, 163, 184, 0.3)',
   },
   neonContainer: {
-    backgroundColor: 'rgba(147, 51, 234, 0.3)',
+    backgroundColor: 'rgba(49, 46, 129, 0.8)',
     borderWidth: 1,
-    borderColor: 'rgba(236, 72, 153, 0.5)',
+    borderColor: 'rgba(236, 72, 153, 0.4)',
+  },
+  operationContainer: {
+    marginBottom: 8,
+  },
+  displayContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'flex-end',
   },
   subText: {
-    fontSize: 16,
-    marginBottom: 8,
-    opacity: 0.7,
+    fontSize: 18,
+    opacity: 0.8,
+    fontWeight: '500',
   },
   darkSubText: {
-    color: '#9CA3AF',
+    color: '#94A3B8',
   },
   lightSubText: {
-    color: '#6B7280',
+    color: '#64748B',
   },
   neonSubText: {
     color: '#FBBF24',
   },
   mainText: {
-    fontWeight: 'bold',
+    fontWeight: '700',
     textAlign: 'right',
-    marginBottom: 8,
+    letterSpacing: 1,
   },
   darkText: {
     color: '#FFFFFF',
