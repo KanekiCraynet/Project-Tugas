@@ -144,7 +144,7 @@ export const useCalculator = () => {
       if (prev.operation && !prev.waitingForOperand) {
         try {
           const currentValue = prev.previousValue || 0;
-          const result = calculator.current.calculate(prev.operation, inputValue, currentValue);
+          const result = calculator.current.calculate(prev.operation as any, inputValue, currentValue);
           const formattedResult = calculator.current.formatNumber(result);
 
           // Add to history if it's a calculation
